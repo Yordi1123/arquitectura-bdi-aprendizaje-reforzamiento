@@ -1,0 +1,129 @@
+batch_id: "B01"
+completed_tasks: ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008"]
+blocked_tasks: []
+files_changed:
+  T001:
+    - file: "practica_semana03_bdi.py"
+      change_type: "created"
+      description: "Agente BDI y simulación de demostración."
+    - file: "practica_semana04_rl.py"
+      change_type: "created"
+      description: "Gridworld, Q-Learning y experimentos comparativos."
+    - file: "README.md"
+      change_type: "modified"
+      description: "Instrucciones de ejecución y dependencia NumPy."
+  T002:
+    - file: "practica_semana03_bdi.py"
+      change_type: "modified"
+      description: "Ventana deslizante e inferencia de fuga de memoria."
+  T003:
+    - file: "practica_semana03_bdi.py"
+      change_type: "modified"
+      description: "Generación de deseos y prioridades BDI."
+  T004:
+    - file: "practica_semana03_bdi.py"
+      change_type: "modified"
+      description: "Planes SLA, exclusión del plan fallido y conmutación al fallback."
+  T005:
+    - file: "practica_semana04_rl.py"
+      change_type: "modified"
+      description: "Transiciones y recompensas del Gridworld."
+  T006:
+    - file: "practica_semana04_rl.py"
+      change_type: "modified"
+      description: "Q-Learning y exploración epsilon-greedy."
+  T007:
+    - file: "practica_semana04_rl.py"
+      change_type: "modified"
+      description: "Reporte de tasas de éxito por bloques."
+  T008:
+    - file: "plan.md"
+      change_type: "modified"
+      description: "Tareas marcadas completadas."
+    - file: "checkpoints/tasks-to-impl.yaml"
+      change_type: "created"
+      description: "Trazabilidad de implementación y validaciones."
+upstream_artifacts_consumed:
+  T001:
+    - artifact: "plan.md"
+      used_for: "Archivos de entrada y fases de implementación."
+    - artifact: "practica4.md"
+      used_for: "Plantillas y requerimientos de la práctica."
+evidence_mapping:
+  T002:
+    - upstream: "plan.md#Paso 2.1"
+      output: "practica_semana03_bdi.py#AgenteBDI_Estudiante.brf"
+      evidence: "La secuencia 40, 58, 75 activa la anomalía; 40, 55, 72 no la activa."
+  T003:
+    - upstream: "plan.md#Paso 2.2"
+      output: "practica_semana03_bdi.py#AgenteBDI_Estudiante.options"
+      evidence: "Prioridades verificadas en orden 100, 80, 75 y 60."
+  T004:
+    - upstream: "plan.md#Paso 2.3"
+      output: "practica_semana03_bdi.py#AgenteBDI_Estudiante.seleccionar_plan_fallback"
+      evidence: "Cuota agotada activa el Circuit Breaker, conserva la intención y cola las acciones."
+  T005:
+    - upstream: "plan.md#Paso 3.1"
+      output: "practica_semana04_rl.py#EntornoGridworldEstocastico.step"
+      evidence: "Recompensas de paso, hoyo y meta verificadas; proporciones de transición cercanas a un tercio."
+  T006:
+    - upstream: "plan.md#Paso 3.2"
+      output: "practica_semana04_rl.py#entrenar_q_learning"
+      evidence: "Tabla Q, callback por episodio y entrenamiento determinista con semilla verificados."
+  T007:
+    - upstream: "plan.md#Paso 3.3"
+      output: "practica_semana04_rl.py#reportar_tasa_exito"
+      evidence: "Ambos experimentos imprimen 20 tasas por bloque de 100 episodios."
+traceability:
+  - requirement: "REQ-001"
+    plan_item: "1.1"
+    task: "T001"
+    files: ["practica_semana03_bdi.py", "practica_semana04_rl.py", "README.md"]
+    status: "completed"
+  - requirement: "REQ-002"
+    plan_item: "2.1"
+    task: "T002"
+    files: ["practica_semana03_bdi.py"]
+    status: "completed"
+  - requirement: "REQ-003"
+    plan_item: "2.2"
+    task: "T003"
+    files: ["practica_semana03_bdi.py"]
+    status: "completed"
+  - requirement: "REQ-004"
+    plan_item: "2.3"
+    task: "T004"
+    files: ["practica_semana03_bdi.py"]
+    status: "completed"
+  - requirement: "REQ-005"
+    plan_item: "3.1"
+    task: "T005"
+    files: ["practica_semana04_rl.py"]
+    status: "completed"
+  - requirement: "REQ-006"
+    plan_item: "3.2"
+    task: "T006"
+    files: ["practica_semana04_rl.py"]
+    status: "completed"
+  - requirement: "REQ-007"
+    plan_item: "3.3"
+    task: "T007"
+    files: ["practica_semana04_rl.py"]
+    status: "completed"
+protocol_violation: false
+errors: []
+warnings:
+  - "Los umbrales de latencia permanecen configurables y no se fijaron, ya que no aparecen en la guía."
+test_results:
+  T001:
+    command: "Ejecución de practica_semana03_bdi.py y practica_semana04_rl.py"
+    passed: 2
+    failed: 0
+    skipped: 0
+    failures: []
+  T008:
+    command: "Diagnóstico Pylance, validación de sintaxis y aserciones funcionales dirigidas"
+    passed: 22
+    failed: 0
+    skipped: 0
+    failures: []

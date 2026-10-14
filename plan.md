@@ -111,23 +111,23 @@ No se identificaron guías de transformación pertinentes: el trabajo es una imp
 
 ### Fase 1: Preparación
 
-- [ ] T001 [Plan:1.1] Crear `practica_semana03_bdi.py` y `practica_semana04_rl.py` con imports, clases/funciones de la plantilla y puntos de entrada independientes.
+- [x] T001 [Plan:1.1] Crear `practica_semana03_bdi.py` y `practica_semana04_rl.py` con imports, clases/funciones de la plantilla y puntos de entrada independientes.
 
 ### Fase 2: Agente BDI
 
-- [ ] T002 [P] [Plan:2.1] Implementar en `practica_semana03_bdi.py` la ventana de tres valores y la inferencia de anomalía con CPU creciente y ambos incrementos consecutivos >15 puntos porcentuales.
-- [ ] T003 [Plan:2.2] Implementar `options()` y `filter()` en `practica_semana03_bdi.py` con los deseos, condiciones disponibles y prioridades 100, 80, 75 y 60.
-- [ ] T004 [Plan:2.3] Registrar los dos planes SLA e implementar selección de plan y conmutación por cuota en `practica_semana03_bdi.py`, preservando `intencion_actual` y excluyendo el plan fallido.
+- [x] T002 [P] [Plan:2.1] Implementar en `practica_semana03_bdi.py` la ventana de tres valores y la inferencia de anomalía con CPU creciente y ambos incrementos consecutivos >15 puntos porcentuales.
+- [x] T003 [Plan:2.2] Implementar `options()` y `filter()` en `practica_semana03_bdi.py` con los deseos, condiciones disponibles y prioridades 100, 80, 75 y 60.
+- [x] T004 [Plan:2.3] Registrar los dos planes SLA e implementar selección de plan y conmutación por cuota en `practica_semana03_bdi.py`, preservando `intencion_actual` y excluyendo el plan fallido.
 
 ### Fase 3: Q-Learning
 
-- [ ] T005 [P] [Plan:3.1] Completar `EntornoGridworldEstocastico` en `practica_semana04_rl.py` con transiciones 1/3–2/3, límites del tablero, estados terminales y ambas funciones de recompensa.
-- [ ] T006 [Plan:3.2] Implementar en `practica_semana04_rl.py` la selección ε-greedy, el decaimiento de ε y la actualización Q mediante TD-Error.
-- [ ] T007 [Plan:3.3] Añadir a `practica_semana04_rl.py` la medición de éxitos por bloque y el reporte reproducible de ambos experimentos.
+- [x] T005 [P] [Plan:3.1] Completar `EntornoGridworldEstocastico` en `practica_semana04_rl.py` con transiciones 1/3–2/3, límites del tablero, estados terminales y ambas funciones de recompensa.
+- [x] T006 [Plan:3.2] Implementar en `practica_semana04_rl.py` la selección ε-greedy, el decaimiento de ε y la actualización Q mediante TD-Error.
+- [x] T007 [Plan:3.3] Añadir a `practica_semana04_rl.py` la medición de éxitos por bloque y el reporte reproducible de ambos experimentos.
 
 ### Fase 4: Validación y entrega
 
-- [ ] T008 [Plan:4.1] Ejecutar los dos scripts por separado y verificar sintaxis, inferencia BDI, fallback, ecuación TD, recompensas y reporte de tasas de éxito.
+- [x] T008 [Plan:4.1] Ejecutar los dos scripts por separado y verificar sintaxis, inferencia BDI, fallback, ecuación TD, recompensas y reporte de tasas de éxito.
 
 ## Mapeo de requisitos
 

@@ -1,0 +1,263 @@
+metadata:
+  generated: "2026-10-14"
+  source_tasks: "plan.md#desglose-de-tareas"
+  last_updated: "2026-10-14"
+
+summary:
+  total_tasks: 8
+  completed_tasks: 8
+  in_progress_tasks: 0
+  pending_tasks: 0
+  completion_percentage: 100.0
+
+tasks:
+  - task_id: "T001"
+    description: "Crear puntos de entrada independientes para ambos ejercicios."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "practica_semana03_bdi.py"
+          changes:
+            - change_type: "added"
+              description: "Añadida la implementación y demostración ejecutable del agente BDI."
+        - file: "practica_semana04_rl.py"
+          changes:
+            - change_type: "added"
+              description: "Añadido el entorno Gridworld y la demostración ejecutable de Q-Learning."
+        - file: "README.md"
+          changes:
+            - change_type: "modified"
+              description: "Documentadas la ejecución independiente y la dependencia NumPy."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Ejecución de ambos scripts con el Python del entorno virtual del proyecto"
+        passed: 2
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Ambos programas finalizaron correctamente."
+    upstream_trace:
+      plan_item: "1.1"
+      requirements: ["REQ-001"]
+      full_trace: "REQ-001 → Phase-1.1 → T001 → scripts independientes"
+  - task_id: "T002"
+    description: "Implementar ventana de CPU e inferencia deductiva."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "practica_semana03_bdi.py"
+          changes:
+            - change_type: "added"
+              description: "Ventana móvil de tres valores y regla de incrementos estrictamente mayores que 15 puntos."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Aserciones dirigidas de inferencia positiva, límite de 15 puntos y ventana móvil"
+        passed: 3
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "La secuencia 40, 58, 75 activa la creencia antes de CPU 80%."
+    upstream_trace:
+      plan_item: "2.1"
+      requirements: ["REQ-002"]
+      full_trace: "REQ-002 → Phase-2.1 → T002 → AgenteBDI_Estudiante.brf"
+  - task_id: "T003"
+    description: "Generar y filtrar deseos según las prioridades establecidas."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "practica_semana03_bdi.py"
+          changes:
+            - change_type: "added"
+              description: "Añadidas las cuatro prioridades y las condiciones de activación de los deseos."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Aserciones dirigidas de prioridades, deseos activos y selección de intención"
+        passed: 5
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Los límites de latencia son configurables; no se inventaron valores predeterminados."
+    upstream_trace:
+      plan_item: "2.2"
+      requirements: ["REQ-003"]
+      full_trace: "REQ-003 → Phase-2.2 → T003 → options/filter"
+  - task_id: "T004"
+    description: "Seleccionar el plan SLA aplicable y conmutar automáticamente al fallback."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "practica_semana03_bdi.py"
+          changes:
+            - change_type: "added"
+              description: "Registrados runbooks principal/fallback y lógica para excluir el plan fallido preservando la intención."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Aserciones dirigidas de cuota agotada, plan fallido, plan alternativo, intención y cola de acciones"
+        passed: 4
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "La intención SLA permanece activa al asignarse el runbook Circuit Breaker."
+    upstream_trace:
+      plan_item: "2.3"
+      requirements: ["REQ-004"]
+      full_trace: "REQ-004 → Phase-2.3 → T004 → seleccionar_plan_fallback/fallback automático"
+  - task_id: "T005"
+    description: "Completar el Gridworld y sus recompensas."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "practica_semana04_rl.py"
+          changes:
+            - change_type: "added"
+              description: "Añadidas transición lateral estocástica, límites, terminales y recompensas configurables."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Aserciones de recompensas por paso, hoyo y meta; muestreo de 30000 transiciones"
+        passed: 7
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Las frecuencias observadas de las tres salidas fueron 0.3357, 0.3308 y 0.3335."
+    upstream_trace:
+      plan_item: "3.1"
+      requirements: ["REQ-005"]
+      full_trace: "REQ-005 → Phase-3.1 → T005 → EntornoGridworldEstocastico"
+  - task_id: "T006"
+    description: "Implementar Q-Learning, TD-Error y exploración epsilon-greedy."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "practica_semana04_rl.py"
+          changes:
+            - change_type: "added"
+              description: "Añadidos selección epsilon-greedy, decaimiento, bootstrap terminal correcto y límite de pasos."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Entrenamiento dirigido en ambos modos, comprobación de tabla Q y callbacks por episodio"
+        passed: 5
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "La secuencia de entrenamiento es reproducible al repetir la semilla."
+    upstream_trace:
+      plan_item: "3.2"
+      requirements: ["REQ-006"]
+      full_trace: "REQ-006 → Phase-3.2 → T006 → entrenar_q_learning"
+  - task_id: "T007"
+    description: "Reportar tasas medias de éxito por bloques en los dos experimentos."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "practica_semana04_rl.py"
+          changes:
+            - change_type: "added"
+              description: "Añadida recopilación de éxitos, resumen por bloque y ejecución reproducible de ambos esquemas."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Ejecución del programa con 2000 episodios para cada modalidad"
+        passed: 1
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Se imprimieron 20 bloques por modalidad, incluyendo sus tasas de éxito."
+    upstream_trace:
+      plan_item: "3.3"
+      requirements: ["REQ-007"]
+      full_trace: "REQ-007 → Phase-3.3 → T007 → reportar_tasa_exito"
+  - task_id: "T008"
+    description: "Validar sintaxis, diagnósticos y ejecución de extremo a extremo."
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "plan.md"
+          changes:
+            - change_type: "modified"
+              description: "Marcadas como completadas las tareas implementadas por fase."
+        - file: "checkpoints/tasks-to-impl.yaml"
+          changes:
+            - change_type: "added"
+              description: "Registrada trazabilidad de tareas, requisitos y evidencia de validación."
+    verification:
+      build_passed: true
+      test_results:
+        command: "Pylance sintaxis/diagnósticos y ejecución de aserciones dirigidas"
+        passed: 4
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Ambos archivos sin errores sintácticos ni diagnósticos Pylance."
+    upstream_trace:
+      plan_item: "4.1"
+      requirements: ["REQ-001", "REQ-002", "REQ-003", "REQ-004", "REQ-005", "REQ-006", "REQ-007"]
+      full_trace: "REQ-001..REQ-007 → Phase-4.1 → T008 → validación funcional"
+
+pending_tasks: []
+untracked_changes: []
+
+traceability_chain:
+  - chain_id: "TRACE-001"
+    requirement: "REQ-001"
+    plan_phase: "Phase-1"
+    plan_item: "1.1"
+    tasks: ["T001", "T008"]
+    files: ["practica_semana03_bdi.py", "practica_semana04_rl.py", "README.md"]
+    status: "complete"
+  - chain_id: "TRACE-002"
+    requirement: "REQ-002"
+    plan_phase: "Phase-2"
+    plan_item: "2.1"
+    tasks: ["T002", "T008"]
+    files: ["practica_semana03_bdi.py"]
+    status: "complete"
+  - chain_id: "TRACE-003"
+    requirement: "REQ-003"
+    plan_phase: "Phase-2"
+    plan_item: "2.2"
+    tasks: ["T003", "T008"]
+    files: ["practica_semana03_bdi.py"]
+    status: "complete"
+  - chain_id: "TRACE-004"
+    requirement: "REQ-004"
+    plan_phase: "Phase-2"
+    plan_item: "2.3"
+    tasks: ["T004", "T008"]
+    files: ["practica_semana03_bdi.py"]
+    status: "complete"
+  - chain_id: "TRACE-005"
+    requirement: "REQ-005"
+    plan_phase: "Phase-3"
+    plan_item: "3.1"
+    tasks: ["T005", "T008"]
+    files: ["practica_semana04_rl.py"]
+    status: "complete"
+  - chain_id: "TRACE-006"
+    requirement: "REQ-006"
+    plan_phase: "Phase-3"
+    plan_item: "3.2"
+    tasks: ["T006", "T008"]
+    files: ["practica_semana04_rl.py"]
+    status: "complete"
+  - chain_id: "TRACE-007"
+    requirement: "REQ-007"
+    plan_phase: "Phase-3"
+    plan_item: "3.3"
+    tasks: ["T007", "T008"]
+    files: ["practica_semana04_rl.py"]
+    status: "complete"
+
+validation:
+  passed: true
+  errors: []
+  warnings:
+    - "NumPy quedó instalado en el entorno virtual del proyecto; README.md documenta cómo instalarlo en otros entornos."
+    - "No se fijaron umbrales de latencia porque la práctica no los especifica."
+  blocking_issues: []

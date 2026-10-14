@@ -1,0 +1,105 @@
+metadata:
+  generated: "2026-10-14"
+  source_spec: "practica4.md"
+  target_plan: "plan.md"
+
+summary:
+  total_requirements: 7
+  covered_requirements: 7
+  missing_requirements: 0
+  coverage_percentage: 100.0
+
+requirements:
+  - req_id: "REQ-001"
+    req_description: "Desarrollar los ejercicios en archivos Python independientes, con comentarios y sin errores sintácticos."
+    priority: "P1"
+    plan_mapping:
+      phase: "Phase-1"
+      phase_name: "Preparación"
+      items:
+        - item_id: "1.1"
+          description: "Crear los puntos de entrada separados."
+        - item_id: "4.1"
+          description: "Verificar sintaxis, ejecución y criterios de aceptación."
+    notes: "El requerimiento de comentarios se aplica a las decisiones no obvias de diseño."
+  - req_id: "REQ-002"
+    req_description: "Mantener ventana de tres lecturas e inferir fuga de memoria con CPU estrictamente creciente y >15 puntos de aumento por ciclo."
+    priority: "P1"
+    plan_mapping:
+      phase: "Phase-2"
+      phase_name: "Agente BDI"
+      items:
+        - item_id: "2.1"
+          description: "Implementar revisión de creencias e inferencia de CPU."
+        - item_id: "4.1"
+          description: "Verificar inferencia antes del umbral crítico."
+    notes: "Regla confirmada por el usuario."
+  - req_id: "REQ-003"
+    req_description: "Generar y priorizar deseos BDI con prioridades 100, 80, 75 y 60."
+    priority: "P1"
+    plan_mapping:
+      phase: "Phase-2"
+      phase_name: "Agente BDI"
+      items:
+        - item_id: "2.2"
+          description: "Generar deseos y seleccionar la intención por prioridad."
+        - item_id: "4.1"
+          description: "Verificar prioridades BDI."
+    notes: "Los umbrales de latencia para caché/SLA no están definidos por la especificación."
+  - req_id: "REQ-004"
+    req_description: "Conmutar del plan principal al fallback cuando se agote cuota, manteniendo la intención."
+    priority: "P1"
+    plan_mapping:
+      phase: "Phase-2"
+      phase_name: "Agente BDI"
+      items:
+        - item_id: "2.3"
+          description: "Seleccionar planes y conmutar al fallback sin perder intención."
+        - item_id: "4.1"
+          description: "Verificar fallback con intención preservada."
+    notes: ""
+  - req_id: "REQ-005"
+    req_description: "Simular Gridworld 4x4 estocástico y las recompensas estándar y con Reward Shaping."
+    priority: "P1"
+    plan_mapping:
+      phase: "Phase-3"
+      phase_name: "Q-Learning"
+      items:
+        - item_id: "3.1"
+          description: "Completar el Gridworld estocástico y sus recompensas."
+        - item_id: "4.1"
+          description: "Verificar transiciones y recompensas."
+    notes: ""
+  - req_id: "REQ-006"
+    req_description: "Implementar Q-Learning por TD-Error y política ε-greedy con decaimiento 1.0 a 0.01 por factor 0.995."
+    priority: "P1"
+    plan_mapping:
+      phase: "Phase-3"
+      phase_name: "Q-Learning"
+      items:
+        - item_id: "3.2"
+          description: "Implementar aprendizaje TD y exploración ε-greedy."
+        - item_id: "4.1"
+          description: "Verificar actualización TD y decaimiento."
+    notes: ""
+  - req_id: "REQ-007"
+    req_description: "Reportar en consola las tasas medias de éxito sobre bloques de episodios y comparar los entornos."
+    priority: "P1"
+    plan_mapping:
+      phase: "Phase-3"
+      phase_name: "Q-Learning"
+      items:
+        - item_id: "3.3"
+          description: "Comparar los esquemas de recompensa por bloques."
+        - item_id: "4.1"
+          description: "Verificar el reporte de tasas de éxito."
+    notes: ""
+
+missing_requirements: []
+orphan_plan_items: []
+
+validation:
+  passed: true
+  errors: []
+  warnings:
+    - "Los umbrales de latencia que activan restauración de caché y estabilización SLA requieren confirmación; no se fijaron valores arbitrarios."

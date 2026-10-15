@@ -127,19 +127,22 @@ def entrenar_q_learning(
     return q_table
 
 
-def reportar_tasa_exito(exitos: List[bool], tamano_bloque: int = 100) -> None:
-    """Imprime la tasa de éxito para bloques completos y parciales."""
+def reportar_tasa_exito(exitos: List[bool], tamano_bloque: int = 100) -> List[float]:
+    """Imprime y devuelve las tasas de éxito por bloque."""
     if tamano_bloque <= 0:
         raise ValueError("tamano_bloque debe ser mayor que cero")
 
+    tasas = []
+    print("  Bloque de episodios | Éxitos | Tasa de llegada a la meta")
+    print("  " + "-" * 53)
     for inicio in range(0, len(exitos), tamano_bloque):
         bloque = exitos[inicio : inicio + tamano_bloque]
         tasa = sum(bloque) / len(bloque)
         fin = inicio + len(bloque)
-        print(
-            f"Episodios {inicio + 1:4d}-{fin:4d}: "
-            f"{tasa:.1%} ({sum(bloque)}/{len(bloque)})"
-        )
+        tasas.append(tasa)
+        print(f"  {inicio + 1:4d}-{fin:4d}             | "
+              f"{sum(bloque):3d}/{len(bloque):3d} | {tasa:6.1%}")
+    return tasas
 
 
 def ejecutar_experimento(
@@ -148,9 +151,13 @@ def ejecutar_experimento(
     episodios: int = 2000,
     tamano_bloque: int = 100,
     semilla: int = 42,
-) -> np.ndarray:
+) -> Tuple[np.ndarray, List[bool], List[float]]:
     nombre = "Reward Shaping" if reward_shaping else "Entorno estándar"
-    print(f"\n--- {nombre} ---")
+    print(f"\n--- Experimento: {nombre} ---")
+    if reward_shaping:
+        print("  Recompensas: +1 meta, -1 hoyo, -0.01 por cada paso.")
+    else:
+        print("  Recompensas: +1 meta; 0 en los demás estados (recompensa dispersa).")
     env = EntornoGridworldEstocastico(
         reward_shaping=reward_shaping, semilla=semilla
     )
@@ -161,16 +168,53 @@ def ejecutar_experimento(
         semilla=semilla,
         al_finalizar_episodio=exitos.append,
     )
-    reportar_tasa_exito(exitos, tamano_bloque)
-    return q_table
+    tasas = reportar_tasa_exito(exitos, tamano_bloque)
+    print(f"  Resumen: {sum(exitos)}/{len(exitos)} episodios alcanzaron la meta "
+          f"({sum(exitos) / len(exitos):.1%}).")
+    return q_table, exitos, tasas
+
+
+def interpretar_resultados(
+    exitos_estandar: List[bool], exitos_shaping: List[bool],
+    q_estandar: np.ndarray, q_shaping: np.ndarray,
+) -> None:
+    """Presenta una comparación que conecta la salida con el objetivo del ejercicio."""
+    tasa_estandar = sum(exitos_estandar) / len(exitos_estandar)
+    tasa_shaping = sum(exitos_shaping) / len(exitos_shaping)
+    diferencia = tasa_shaping - tasa_estandar
+    acciones = ("izquierda", "abajo", "derecha", "arriba")
+
+    print("\n=== INTERPRETACIÓN DE RESULTADOS ===")
+    print("  Métrica: un éxito significa llegar a la meta antes de caer en un hoyo.")
+    print(f"  Estándar:       {tasa_estandar:.1%}")
+    print(f"  Reward Shaping: {tasa_shaping:.1%}")
+    print(f"  Diferencia (shaping - estándar): {diferencia:+.1%}")
+    if diferencia > 0:
+        print("  Con esta semilla, el shaping facilitó el aprendizaje al dar "
+              "retroalimentación también durante el recorrido.")
+    elif diferencia < 0:
+        print("  Con esta semilla, el shaping no superó al entorno estándar; "
+              "la dinámica sigue siendo estocástica.")
+    else:
+        print("  Con esta semilla ambos esquemas obtuvieron la misma tasa global.")
+
+    print("\n  Estado inicial (0): la acción con mayor Q es la preferida por el agente.")
+    print(f"  Estándar:       {acciones[int(np.argmax(q_estandar[0]))]} "
+          f"| Q = {np.round(q_estandar[0], 3)}")
+    print(f"  Reward Shaping: {acciones[int(np.argmax(q_shaping[0]))]} "
+          f"| Q = {np.round(q_shaping[0], 3)}")
+    print("  Nota: la acción ejecutada puede desviarse lateralmente por el ruido del entorno.")
 
 
 def main() -> None:
     print("=== EVALUACIÓN EJERCICIO 2: Q-LEARNING Y REWARD SHAPING ===")
-    q_estandar = ejecutar_experimento(reward_shaping=False)
-    q_shaping = ejecutar_experimento(reward_shaping=True)
-    print("\nTabla Q Entorno Estándar (Estado 0):", np.round(q_estandar[0, :], 3))
-    print("Tabla Q Reward Shaping (Estado 0):", np.round(q_shaping[0, :], 3))
+    print("Mapa 4x4: inicio=0, hoyos={5, 7, 11, 12}, meta=15.")
+    print("Acciones: 0=izquierda, 1=abajo, 2=derecha, 3=arriba.")
+    print("Transición: 1/3 acción elegida; 2/3 desviación lateral.")
+    print("Parametros: 2000 episodios, alpha=0.8, gamma=0.95, epsilon inicial=1.0 (minimo=0.01).")
+    q_estandar, exitos_estandar, _ = ejecutar_experimento(reward_shaping=False)
+    q_shaping, exitos_shaping, _ = ejecutar_experimento(reward_shaping=True)
+    interpretar_resultados(exitos_estandar, exitos_shaping, q_estandar, q_shaping)
 
 
 if __name__ == "__main__":

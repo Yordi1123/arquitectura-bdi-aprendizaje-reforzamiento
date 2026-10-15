@@ -1,5 +1,6 @@
 """Demostración de agente BDI para la práctica de laboratorio."""
 
+import sys
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional
 
@@ -199,7 +200,19 @@ class AgenteBDI_Estudiante:
 
 
 def main() -> None:
-    print("=== EVALUACIÓN EJERCICIO 1: AGENTE BDI ===")
+    # Mantiene legibles las tildes y la ñ al ejecutar el script en Windows.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
+    separador = "=" * 68
+    subseparador = "-" * 68
+
+    print(f"\n{separador}")
+    print(" PRÁCTICA SEMANA 03: AGENTE BDI PARA SUPERVISIÓN DE CLÚSTER")
+    print(separador)
+
+    print("\n[1] REVISIÓN DE CREENCIAS: DETECCIÓN DE FUGA DE MEMORIA")
+    print(subseparador)
     agente = AgenteBDI_Estudiante()
     for ciclo, cpu in enumerate((40.0, 58.0, 75.0), start=1):
         agente.brf(
@@ -210,12 +223,22 @@ def main() -> None:
                 alerta_siem=False,
             )
         )
+        print(f"  Ciclo {ciclo}: CPU = {cpu:5.1f}%")
 
-    print("Historial CPU:", agente.creencias["historial_cpu"])
+    historial = agente.creencias["historial_cpu"]
+    incrementos = [
+        historial[indice] - historial[indice - 1]
+        for indice in range(1, len(historial))
+    ]
+    anomalia = agente.creencias["anomalia_fuga_memoria"]
+    print(f"\n  Historial analizado : {' -> '.join(f'{cpu:.1f}%' for cpu in historial)}")
     print(
-        "Anomalía de fuga antes del 80%:",
-        agente.creencias["anomalia_fuga_memoria"],
+        "  Incrementos         : "
+        + ", ".join(f"+{incremento:.1f} puntos" for incremento in incrementos)
     )
+    print("  Regla de detección  : tres lecturas crecientes y aumentos > 15")
+    print(f"  Resultado            : {'ANOMALÍA DETECTADA' if anomalia else 'Sin anomalía'}")
+    print(f"  Detección antes 80% : {'Sí' if anomalia and historial[-1] < 80 else 'No'}")
 
     # Estos indicadores permiten demostrar la jerarquía sin inventar límites
     # de latencia que no aparecen en el enunciado.
@@ -223,14 +246,32 @@ def main() -> None:
     agente.creencias["servicio_cache_degradado"] = True
     agente.creencias["estabilizar_sla"] = True
     deseos = agente.options()
+    intencion_seleccionada = agente.filter(deseos)
+
+    print("\n[2] DELIBERACIÓN: DESEOS E INTENCIÓN")
+    print(subseparador)
+    print(f"  {'PRIORIDAD':<11} | DESEO ACTIVO")
+    print(f"  {'-' * 11}-+-{'-' * 45}")
+    for deseo in sorted(
+        deseos.values(), key=lambda deseo: deseo.prioridad, reverse=True
+    ):
+        print(f"  {deseo.prioridad:^11} | {deseo.nombre}")
     print(
-        "Deseos por prioridad:",
-        [(d.nombre, d.prioridad) for d in deseos.values()],
+        f"\n  Intención elegida   : "
+        f"{intencion_seleccionada.nombre if intencion_seleccionada else 'Ninguna'}"
     )
-    print("Intención seleccionada:", agente.filter(deseos))
+    if intencion_seleccionada is not None:
+        print(f"  Prioridad ganadora  : {intencion_seleccionada.prioridad}")
 
     agente.intencion_actual = Deseo(ESTABILIZAR_RENDIMIENTO_SLA, 60)
     agente.plan_activo = BIBLIOTECA_PLANES[0]
+
+    print("\n[3] REPLANIFICACIÓN: CUOTA CLOUD AGOTADA")
+    print(subseparador)
+    print(f"  Intención vigente   : {agente.intencion_actual.nombre}")
+    print(f"  Plan inicial        : {agente.plan_activo.nombre}")
+    print("  Evento recibido     : cuota_cloud_agotada = Sí")
+
     agente.brf(
         TelemetriaCluster(
             ciclo=4,
@@ -240,10 +281,22 @@ def main() -> None:
             cuota_agotada=True,
         )
     )
-    print("Plan fallido:", agente.creencias["plan_fallido"])
-    print("Plan de fallback:", agente.plan_activo.nombre if agente.plan_activo else None)
-    print("Intención preservada:", agente.intencion_actual)
-    print("Acciones en cola:", agente.cola_acciones)
+    print(f"\n  Plan descartado     : {agente.creencias['plan_fallido']}")
+    print(
+        "  Plan alternativo    : "
+        f"{agente.plan_activo.nombre if agente.plan_activo else 'No disponible'}"
+    )
+    print(
+        "  Intención preservada: "
+        f"{agente.intencion_actual.nombre if agente.intencion_actual else 'No'}"
+    )
+    print("  Acciones programadas:")
+    for numero, accion in enumerate(agente.cola_acciones, start=1):
+        print(f"    {numero}. {accion}")
+
+    print(f"\n{separador}")
+    print(" RESULTADO: ciclo BDI demostrado correctamente")
+    print(f"{separador}\n")
 
 
 if __name__ == "__main__":
